@@ -10,20 +10,29 @@ jobs:
   push_to_remote:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout code with full history
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
+      - name: List local branches
+        run: git branch
+
       - name: Set up Git
         run: |
           git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.email "actions@innovaweb.cl"
 
       - name: Add remote
         run: git remote add other-remote ${{ secrets.REMOTE_INNOVAWEB }}
 
-      - name: Push to another remote
-        run: git push other-remote ${{ github.head_ref }}
+      - name: Checkout target branch of PR
+        run: |
+          git fetch
+          git checkout ${{ github.base_ref }}
+
+      - name: Push to target branch on other-remote
+        run: git push other-remote ${{ github.base_ref }}
         env:
           REMOTE_TOKEN: ${{ secrets.REMOTE_TOKEN }}
+          
