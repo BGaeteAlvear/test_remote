@@ -33,7 +33,7 @@ jobs:
 
     - name: Add remote REMOTE_INNOVAWEB
       run: |
-        git remote add ${{env.REMOTE_INNOVAWEB}}
+        git remote add other-remote ${{env.REMOTE_INNOVAWEB}}
 
     - name: Push to REMOTE_INNOVAWEB
       run: |
