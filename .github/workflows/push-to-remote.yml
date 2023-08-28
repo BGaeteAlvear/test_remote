@@ -35,4 +35,4 @@ jobs:
 
     - name: Push changes
       run: |
-        git push $REMOTE_URL HEAD:${{ github.base_ref }}
+        git push origin ${{ github.base_ref }}
