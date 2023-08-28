@@ -2,10 +2,6 @@ name: Push to other remote
 on: 
   pull_request:
     types: [opened, synchronize]
-
-env:
-  REMOTE_URL: ${{ secrets.REMOTE_INNOVAWEB }}
-
 jobs:
   push:
     runs-on: ubuntu-latest
@@ -17,8 +13,8 @@ jobs:
         
     - name: Check remote URL
       run: |
-        echo "Remote URL is $REMOTE_URL"
-        if [ -z "$REMOTE_URL" ]; then
+        echo "Remote URL is ${{ secrets.REMOTE_INNOVAWEB }}"
+        if [ -z "${{ secrets.REMOTE_INNOVAWEB }}" ]; then
           echo "REMOTE_URL is missing"
           exit 1
         fi
@@ -35,5 +31,5 @@ jobs:
 
     - name: Push changes
       run: |
-        echo "Remote URL : git push $REMOTE_URL HEAD:${{ github.base_ref }}" |
-        git push $REMOTE_URL HEAD:${{ github.base_ref }}
+        echo "Remote URL : git push ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}" |
+        git push ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}
