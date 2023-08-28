@@ -26,6 +26,9 @@ jobs:
       - name: Add remote
         run: git remote add other-remote ${{ secrets.REMOTE_INNOVAWEB }}
 
+      - name: Debug remote config
+        run: git remote -v
+
       - name: Checkout target branch of PR
         run: |
           git fetch
