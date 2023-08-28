@@ -24,7 +24,7 @@ jobs:
           git config user.email "actions@innovaweb.cl"
 
       - name: Add remote
-        run: git remote add other-remote ${{ secrets.REMOTE_INNOVAWEB }}
+        run: git remote add ${{ secrets.REMOTE_INNOVAWEB }}
 
       - name: Debug remote config
         run: git remote -v
@@ -35,7 +35,7 @@ jobs:
           git checkout ${{ github.base_ref }}
 
       - name: Push to target branch on other-remote
-        run: git push other-remote ${{ github.base_ref }}
+        run: git push ${{ secrets.REMOTE_INNOVAWEB }} ${{ github.base_ref }}
         env:
           REMOTE_TOKEN: ${{ secrets.REMOTE_TOKEN }}
           
