@@ -1,41 +1,38 @@
-name: Push to another remote
+name: Push to other remote based on PR target branch
 
-on:
+on: 
   pull_request:
-    branches:
-      - main
-      - develop
+    types: [opened,synchronize]
+    
+env:
+  REMOTE_INNOVAWEB: ${{secrets.REMOTE_INNOVAWEB}}  
 
 jobs:
-  push_to_remote:
+
+  push:
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code with full history
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+    
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
-      - name: List local branches
-        run: git branch
+    - name: Configure Git
+      run: |  
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
 
-      - name: Set up Git
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@innovaweb.cl"
+    - name: Add remote origin
+      run: |
+        git remote add origin https://github.com/${GITHUB_REPOSITORY}.git
 
-      - name: Add remote
-        run: git remote add other-remote ${{ secrets.REMOTE_INNOVAWEB }}
+    - name: Add remote REMOTE_INNOVAWEB 
+      run: |
+        git remote add REMOTE_INNOVAWEB ${{env.REMOTE_INNOVAWEB}}
 
-      - name: Debug remote config
-        run: git remote -v
-
-      - name: Checkout target branch of PR
-        run: |
-          git fetch
-          git checkout ${{ github.base_ref }}
-
-      - name: Push to target branch on other-remote
-        run: git push other-remote ${{ github.base_ref }}
-        env:
-          REMOTE_TOKEN: ${{ secrets.REMOTE_TOKEN }}
-          
+    - name: Push to REMOTE_INNOVAWEB
+      run: |
+        git push REMOTE_INNOVAWEB HEAD:${GITHUB_BASE_REF}
