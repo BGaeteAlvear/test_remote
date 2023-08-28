@@ -2,7 +2,7 @@ name: Push to other remote
 on: 
   pull_request:
     types: [opened, synchronize]
-    
+
 jobs:
   push:
     runs-on: ubuntu-latest
