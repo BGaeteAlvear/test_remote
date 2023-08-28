@@ -1,0 +1,29 @@
+name: Push to another remote
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  push_to_remote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Add remote
+        run: git remote add other-remote ${{ secrets.REMOTE_INNOVAWEB }}
+
+      - name: Push to another remote
+        run: git push other-remote ${{ github.head_ref }}
+        env:
+          REMOTE_TOKEN: ${{ secrets.REMOTE_TOKEN }}
