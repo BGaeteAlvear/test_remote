@@ -3,10 +3,7 @@ name: Push to other remote based on PR target branch
 on: 
   pull_request:
     types: [opened,synchronize]
-    
-env:
-  REMOTE_INNOVAWEB: ${{secrets.REMOTE_INNOVAWEB}}
-
+  
 jobs:
 
   push:
@@ -33,8 +30,8 @@ jobs:
 
     - name: Add remote REMOTE_INNOVAWEB
       run: |
-        git remote add other-remote ${{env.REMOTE_INNOVAWEB}}
+        git remote add other-remote ${{secrets.REMOTE_INNOVAWEB}}
 
     - name: Push to REMOTE_INNOVAWEB
       run: |
-        git push ${{env.REMOTE_INNOVAWEB}} HEAD:${GITHUB_BASE_REF}
+        git push ${{secrets.REMOTE_INNOVAWEB}} HEAD:${GITHUB_BASE_REF}
