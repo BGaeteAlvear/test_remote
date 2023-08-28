@@ -5,7 +5,7 @@ on:
     types: [opened,synchronize]
     
 env:
-  REMOTE_INNOVAWEB: ${{secrets.REMOTE_INNOVAWEB}}  
+  REMOTE_INNOVAWEB: ${{secrets.REMOTE_INNOVAWEB}}
 
 jobs:
 
@@ -20,16 +20,18 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Configure Git
-      run: |  
+    - name: Configure Git  
+      run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
 
     - name: Add remote origin
-      run: |
-        git remote add origin https://github.com/${GITHUB_REPOSITORY}.git
+      run: |  
+        if ! git remote | grep -q origin; then
+          git remote add origin https://github.com/${GITHUB_REPOSITORY}.git
+        fi
 
-    - name: Add remote REMOTE_INNOVAWEB 
+    - name: Add remote REMOTE_INNOVAWEB
       run: |
         git remote add REMOTE_INNOVAWEB ${{env.REMOTE_INNOVAWEB}}
 
