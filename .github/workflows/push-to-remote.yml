@@ -46,4 +46,4 @@ jobs:
     - name: Push changes
       run: |
         echo "Remote URL : git push ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}" |
-        git push ${{ secrets.REMOTE_INNOVAWEB }} ${{ github.base_ref }}
+        git push ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}
