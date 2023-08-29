@@ -1,7 +1,7 @@
 name: Push to other remote
 on: 
   pull_request:
-    branches :
+    branches:    
       - main
       - develop
 
@@ -9,42 +9,33 @@ jobs:
   push:
     runs-on: ubuntu-latest
     steps:
-    
-    - name: Checkout repository
+    - name: Checkout code  
       uses: actions/checkout@v2
-      with: 
+      with:
         token: ${{ secrets.REMOTE_TOKEN }}
         fetch-depth: 0
         
-    - name: List local branches
-      run: git branch
-
-    - name: Setup Git
+    - name: Configure Git
       run: |
-        git config user.name "GitHub Actions Bot"
+        git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
-      #git config pull.rebase false # Merge después de pull
-    
-    - name: Check remote URL
+        
+    - name: Check remote URL  
       run: |
         echo "Remote URL is ${{ secrets.REMOTE_INNOVAWEB }}"
         if [ -z "${{ secrets.REMOTE_INNOVAWEB }}" ]; then
-          echo "REMOTE_URL is missing"
+          echo "Missing remote URL"
           exit 1
         fi
-
-    - name: Debug remote config
-      run: git remote -v
-
-    - name: Fetch latest changes  
+    
+    - name: Add remote
+      run: |  
+        git remote add remote_repo ${{ secrets.REMOTE_INNOVAWEB }}
+    
+    - name: Fetch latest changes
       run: |
-        git fetch ${{ secrets.REMOTE_INNOVAWEB }}
-
-    - name: Rebase on top of remote
-      run: |
-        git rebase ${{ secrets.REMOTE_INNOVAWEB }}/${{ github.base_ref }}
-      
+        git fetch remote_repo
+        
     - name: Push changes
       run: |
-        echo "Remote URL : git push ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}" |
-        git push ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}
+        git push remote_repo HEAD:${{ github.base_ref }}
