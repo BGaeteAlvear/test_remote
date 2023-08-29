@@ -1,7 +1,9 @@
 name: Push to other remote
 on: 
   pull_request:
-    types: [opened, synchronize]
+    branches :
+      - main
+      - develop
 
 jobs:
   push:
@@ -34,4 +36,4 @@ jobs:
     - name: Push changes
       run: |
         echo "Remote URL : git push ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}" |
-        git push -f ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}
+        git push ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}
