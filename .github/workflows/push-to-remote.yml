@@ -32,6 +32,20 @@ jobs:
       with: 
         token: ${{ secrets.REMOTE_TOKEN }}
         fetch-depth: 0
+        
+    - name: Stash uncommitted changes
+      run: git stash
+
+    - name: Checkout target branch of PR
+      run: |
+        git fetch
+        git checkout ${{ github.base_ref }}
+
+    - name: Apply stash and commit
+      run: |
+        git stash apply
+        git add .
+        git commit -m "Apply stash via GitHub Actions"
 
     - name: Push changes
       run: |
