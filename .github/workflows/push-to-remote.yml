@@ -15,28 +15,21 @@ jobs:
         with:
           token: ${{ secrets.REMOTE_TOKEN }}
           fetch-depth: 0
-
       - name: Set up Git
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git config pull.rebase false  # merge
-
       - name: Add remote repository
         run: git remote add other-remote ${{ secrets.REMOTE_INNOVAWEB }}
-
       - name: Fetch remote repository
         run: git fetch remote_repo
-
       - name: Configure pull method
         run: git config pull.rebase false
-
       - name: Pull from remote repository
         run: git pull remote_repo ${{ github.base_ref }} || exit 0
-
       - name: Push to remote repository
         run: git push remote_repo ${{ github.base_ref }} || exit 0
-
       - name: Create new branch if push fails
         run: |
           current_time=$(date +"%Y%m%d_%H%M")
