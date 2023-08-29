@@ -21,6 +21,9 @@ jobs:
           echo "REMOTE_URL is missing"
           exit 1
         fi
+
+    - name: List local branches
+      run: git branch
     
     - name: Setup Git
       run: |
@@ -43,11 +46,11 @@ jobs:
 
     - name: Apply stash and commit
       run: |
-        git stash apply
+        git stash apply || true
         git add .
-        git commit -m "Apply stash via GitHub Actions"
+        git commit -m "Apply stash via GitHub Actions" || true
 
     - name: Push changes
       run: |
         echo "Remote URL : git push ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}" |
-        git push ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}
+        git push ${{ secrets.REMOTE_INNOVAWEB }} ${{ github.base_ref }}
