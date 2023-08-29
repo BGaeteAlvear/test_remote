@@ -9,11 +9,21 @@ jobs:
   push:
     runs-on: ubuntu-latest
     steps:
-
-    - uses: actions/checkout@v2
-      with:
+    
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with: 
+        token: ${{ secrets.REMOTE_TOKEN }}
         fetch-depth: 0
         
+    - name: List local branches
+      run: git branch
+
+    - name: Setup Git
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "actions@github.com"
+    
     - name: Check remote URL
       run: |
         echo "Remote URL is ${{ secrets.REMOTE_INNOVAWEB }}"
@@ -22,20 +32,9 @@ jobs:
           exit 1
         fi
 
-    - name: List local branches
-      run: git branch
-    
-    - name: Setup Git
-      run: |
-        git config user.name "GitHub Actions Bot"
-        git config user.email "actions@github.com"
-             
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      with: 
-        token: ${{ secrets.REMOTE_TOKEN }}
-        fetch-depth: 0
-        
+    - name: Debug remote config
+      run: git remote -v
+
     - name: Stash uncommitted changes
       run: git stash
 
@@ -49,7 +48,10 @@ jobs:
         git stash apply || true
         git add .
         git commit -m "Apply stash via GitHub Actions" || true
-
+        
+    - name: Pull from remote before push
+      run: git pull other-remote ${{ github.base_ref }}
+      
     - name: Push changes
       run: |
         echo "Remote URL : git push ${{ secrets.REMOTE_INNOVAWEB }} HEAD:${{ github.base_ref }}" |
