@@ -50,7 +50,7 @@ jobs:
         git commit -m "Apply stash via GitHub Actions" || true
         
     - name: Pull from remote before push
-      run: git pull other-remote ${{ github.base_ref }}
+      run: git pull Remote URL ${{ github.base_ref }}
       
     - name: Push changes
       run: |
