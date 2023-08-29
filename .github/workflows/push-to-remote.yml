@@ -41,7 +41,8 @@ jobs:
 
     - name: Checkout target branch 
       run: |
-        git fetch ${{ secrets.REMOTE_INNOVAWEB }}
+        git fetch origin
+        git rebase origin/${{ github.base_ref }}
       
     - name: Push changes
       run: |
