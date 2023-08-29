@@ -36,13 +36,13 @@ jobs:
     - name: Debug remote config
       run: git remote -v
 
-    - name: Stash uncommitted changes
-      run: git stash
-
-    - name: Checkout target branch 
+    - name: Fetch latest changes  
       run: |
-        git fetch origin
-        git rebase origin/${{ github.base_ref }}
+        git fetch ${{ secrets.REMOTE_INNOVAWEB }}
+
+    - name: Rebase on top of remote
+      run: |
+        git rebase ${{ secrets.REMOTE_INNOVAWEB }}/${{ github.base_ref }}
       
     - name: Push changes
       run: |
