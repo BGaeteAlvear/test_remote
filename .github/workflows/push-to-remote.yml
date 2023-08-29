@@ -20,6 +20,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+          git config pull.rebase false  # merge
 
       - name: Add remote repository
         run: git remote add other-remote ${{ secrets.REMOTE_INNOVAWEB }}
