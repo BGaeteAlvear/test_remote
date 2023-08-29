@@ -1,48 +1,38 @@
-name: Push to Remote
+name: Sync to Remote Repo on Pull Request
+
 on:
   pull_request:
-    branches:    
-      - main
+    branches:
       - develop
+      - master
 
 jobs:
-
-  push:
-
+  sync_to_remote:
     runs-on: ubuntu-latest
-
     steps:
-    
-    - uses: actions/checkout@v2
-      with: 
-        token: ${{ secrets.REMOTE_TOKEN }}
-        fetch-depth: 0
-        
-    - name: Configure Git  
-      run: |
-        git config user.name "Actions"
-        git config user.email "actions@github.com"
-        
-    - name: Check remote URL
-      run: |
-        echo "Remote URL is ${{ secrets.REMOTE_INNOVAWEB }}"
-        if [ -z "${{ secrets.REMOTE_INNOVAWEB }}" ]; then
-          echo "Missing remote URL" 
-          exit 1
-        fi
-    
-    - name: Add remote  
-      run: |
-        git remote add remote_repo ${{ secrets.REMOTE_INNOVAWEB }}
-    
-    - name: Fetch latest changes
-      run: |
-        git fetch remote_repo
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.REMOTE_TOKEN }}
+          fetch-depth: 0
 
-    - name: Pull changes  
-      run: |
-        git pull remote_repo main
-    
-    - name: Push changes
-      run: |
-        git push remote_repo HEAD:${{github.base_ref}}
+      - name: Set up Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Add remote repository
+        run: git remote add other-remote ${{ secrets.REMOTE_INNOVAWEB }}
+
+      - name: Fetch remote repository
+        run: git fetch other-remote
+
+      - name: Try pushing to target branch on remote repository
+        run: git push other-remote ${{ github.base_ref }} || exit 0
+
+      - name: Create new branch if push fails
+        run: |
+          current_time=$(date +"%Y%m%d_%H%M")
+          new_branch_name="${{ github.base_ref }}_${current_time}"
+          git checkout -b $new_branch_name
+          git push other-remote $new_branch_name
